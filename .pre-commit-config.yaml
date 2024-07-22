@@ -30,6 +30,11 @@ repos:
       - id: poetry-export
       - id: poetry-install
 
-ci:
-  autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
-  autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        require_serial: true
+        entry: poetry run mypy
+        language: system
+        types: [ python ]
