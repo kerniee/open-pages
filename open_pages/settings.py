@@ -1,5 +1,7 @@
 import functools
+from typing import Annotated
 
+from fastapi import Depends
 from pydantic import DirectoryPath
 from pydantic_settings import BaseSettings
 
@@ -13,3 +15,6 @@ class Settings(BaseSettings):
 @functools.lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+
+SettingsDep = Annotated[Settings, Depends(get_settings)]
