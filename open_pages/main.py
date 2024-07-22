@@ -42,3 +42,9 @@ async def upload_site_files(
         tasks.append(save_file(file, dst, 1024))
     await asyncio.gather(*tasks)
     return "ok"
+
+
+@app.get("/sites/{name}", response_model=list[str])
+async def list_site_files(name: FileName, settings: SettingsDep):
+    site_folder = settings.data_dir / name
+    return [file.name for file in site_folder.iterdir() if file.is_file()]
