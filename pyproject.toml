@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "open-pages"
+version = "0.1.0"
+description = "Open Pages is an open-source project that provides a minimalistic alternative to GitHub Pages or GitLab Pages. This service allows users to upload and serve static HTML files via a simple UI or API"
+authors = ["Matvey Abramov <karapys.mor@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "open_pages" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.1"
+uvicorn = "^0.30.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
