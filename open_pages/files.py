@@ -23,7 +23,11 @@ async def save_file(src: UploadFile, dst: Path, chunk_size: int) -> None:
 def get_files(site_name: str, settings: SettingsDep) -> Iterable[Path]:
     site_folder = settings.data_dir / site_name
 
-    if not site_folder.exists():
+    if (
+        not site_folder.exists()
+        or not site_folder.is_dir()
+        or not any(site_folder.iterdir())
+    ):
         raise ValueError("Site not found")
 
     for f in site_folder.iterdir():

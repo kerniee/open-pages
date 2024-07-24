@@ -30,5 +30,5 @@ async def upload_site_files(
 
 
 @router.get("/sites/{site_name}")
-async def list_site_files(site_name: FileName, settings: SettingsDep) -> list[str]:
+def list_site_files(site_name: FileName, settings: SettingsDep) -> list[str]:
     return [file.name for file in get_files(site_name, settings)]

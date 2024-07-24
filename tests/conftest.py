@@ -1,6 +1,6 @@
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import BinaryIO, Generator, TypeVar
+from typing import Generator, TypeVar
 
 from fastapi.testclient import TestClient
 from pytest import fixture
@@ -13,7 +13,13 @@ YieldFixture = Generator[T, None, None]
 
 
 @fixture
-def client(data_folder) -> TestClient:
+def data_folder() -> YieldFixture[Path]:
+    with TemporaryDirectory() as tmp_dir:
+        yield Path(tmp_dir)
+
+
+@fixture
+def client(data_folder: Path) -> TestClient:
     app.dependency_overrides[get_settings] = lambda: Settings(data_dir=data_folder)
     return TestClient(app)
 
@@ -24,24 +30,18 @@ def files_folder() -> Path:
 
 
 @fixture(scope="session")
-def index_html(files_folder) -> YieldFixture[BinaryIO]:
-    with open(files_folder / "index.html", "rb") as f:
-        yield f
+def index_html(files_folder: Path) -> str:
+    with open(files_folder / "index.html") as f:
+        return f.read()
 
 
 @fixture(scope="session")
-def index_css(files_folder) -> YieldFixture[BinaryIO]:
-    with open(files_folder / "index.css", "rb") as f:
-        yield f
+def index_css(files_folder: Path) -> str:
+    with open(files_folder / "index.css") as f:
+        return f.read()
 
 
 @fixture(scope="session")
-def index_js(files_folder) -> YieldFixture[BinaryIO]:
-    with open(files_folder / "index.js", "rb") as f:
-        yield f
-
-
-@fixture
-def data_folder() -> YieldFixture[Path]:
-    with TemporaryDirectory() as tmp_dir:
-        yield Path(tmp_dir)
+def index_js(files_folder: Path) -> str:
+    with open(files_folder / "index.js") as f:
+        return f.read()
