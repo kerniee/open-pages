@@ -1,3 +1,4 @@
+from collections import namedtuple
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Generator, TypeVar
@@ -10,6 +11,7 @@ from open_pages.settings import Settings, get_settings
 
 T = TypeVar("T")
 YieldFixture = Generator[T, None, None]
+SiteFiles = namedtuple("SiteFiles", ["filename", "file_contents"])
 
 
 @fixture
@@ -30,18 +32,26 @@ def files_folder() -> Path:
 
 
 @fixture(scope="session")
-def index_html(files_folder: Path) -> str:
-    with open(files_folder / "index.html") as f:
-        return f.read()
+def file_names() -> list[str]:
+    return ["index.html", "index.css", "index.js"]
 
 
 @fixture(scope="session")
-def index_css(files_folder: Path) -> str:
-    with open(files_folder / "index.css") as f:
-        return f.read()
+def site_files(files_folder, file_names) -> list[SiteFiles]:
+    result = []
+    for file_name in file_names:
+        with open(files_folder / file_name) as f:
+            result.append(SiteFiles(file_name, f.read()))
+    return result
 
 
-@fixture(scope="session")
-def index_js(files_folder: Path) -> str:
-    with open(files_folder / "index.js") as f:
-        return f.read()
+@fixture()
+def test_site(client, site_files) -> str:
+    site_name = "simple_site"
+
+    resp = client.post(
+        f"/api/sites/{site_name}", files=[("files", f) for f in site_files]
+    )
+    assert resp.status_code == 200
+
+    return site_name

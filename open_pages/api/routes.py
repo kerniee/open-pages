@@ -4,12 +4,13 @@ from typing import Annotated
 from fastapi import APIRouter, UploadFile
 from pydantic import StringConstraints
 
+from open_pages.common import AppException
 from open_pages.files import get_files, save_file
 from open_pages.settings import SettingsDep
 
 router = APIRouter(prefix="/api")
 
-FileName = Annotated[str, StringConstraints(pattern=r"^[a-zA-Z0-9_\-\.]+$")]
+FileName = Annotated[str, StringConstraints(pattern=r"^[a-zA-Z0-9_\-]+$")]
 
 
 @router.post("/sites/{name}")
@@ -22,7 +23,7 @@ async def upload_site_files(
     tasks = []
     for file in files:
         if not file.filename:
-            raise ValueError("Invalid file name")
+            raise AppException("Invalid file name")
         dst = site_folder / file.filename
         tasks.append(save_file(file, dst, settings.chunk_size))
     await asyncio.gather(*tasks)

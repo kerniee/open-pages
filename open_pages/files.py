@@ -4,7 +4,7 @@ from typing import Iterable
 import aiofiles
 from fastapi import UploadFile
 
-from open_pages.log import log
+from open_pages.common import AppException, log
 from open_pages.settings import SettingsDep
 
 
@@ -28,7 +28,7 @@ def get_files(site_name: str, settings: SettingsDep) -> Iterable[Path]:
         or not site_folder.is_dir()
         or not any(site_folder.iterdir())
     ):
-        raise ValueError("Site not found")
+        raise AppException("Site not found")
 
     for f in site_folder.iterdir():
         if f.is_file():
