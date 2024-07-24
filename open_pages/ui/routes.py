@@ -10,7 +10,7 @@ from open_pages.files import get_files, get_sites
 from open_pages.settings import SettingsDep
 from open_pages.ui.utils import get_site_from_referer
 
-router = APIRouter()
+router = APIRouter(tags=["UI"])
 
 templates = Jinja2Templates(directory="templates")
 
@@ -65,4 +65,5 @@ def visit_site(
     if not chosen_file_path:
         raise AppException("No index.html found")
 
-    return FileResponse(chosen_file_path)
+    headers = {"Cache-Control": "no-cache"}
+    return FileResponse(chosen_file_path, headers=headers)

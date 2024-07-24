@@ -14,13 +14,16 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+
         h2 {
             color: #2c3e50;
         }
+
         ul {
             list-style-type: none;
             padding: 0;
         }
+
         li {
             background: #ecf0f1;
             margin: 5px 0;
@@ -28,16 +31,63 @@
             border-radius: 5px;
         }
     </style>
+    <script>
+      window.addEventListener('load', function () {
+        const modalElement = document.getElementById("modal");
+        const uploadBtn = document.getElementById("upload-btn");
+        const uploadForm = document.getElementById("upload-form");
+
+
+        uploadBtn.addEventListener("click", () => {
+          modalElement.showModal();
+        });
+
+        uploadForm.addEventListener("submit", (event) => {
+          if (event.submitter.value === "cancel") {
+            return;
+          }
+
+          event.preventDefault();
+          const formData = new FormData(uploadForm);
+          fetch(uploadForm.action, {
+            method: uploadForm.method,
+            body: formData
+          }).then((response) => {
+            if (response.ok) {
+              window.location.reload();
+            }
+          });
+        });
+      })
+    </script>
 </head>
 <body>
-    <h1>Site Files Hierarchy</h1>
-    {% for site, files in sites.items() %}
-        <h2><a href="sites/{{ site }}">{{ site }}</a></h2>
-        <ul>
-            {% for file in files %}
-                <li>{{ file }}</li>
-            {% endfor %}
-        </ul>
+<h1>Site Files Hierarchy</h1>
+
+<button id="upload-btn">Upload Site</button>
+<dialog id="modal">
+    <form method="post" enctype="multipart/form-data" action="/api/sites/" id="upload-form">
+        <p>
+            <label>Site Name: </label><br/>
+            <input type="text" name="name"/>
+        <p>
+        <p>
+            <label>Add files: </label><br/>
+            <input type="file" name="files" multiple="multiple"/>
+        </p>
+        <input type="submit"/>
+        </p>
+        <button value="cancel" formmethod="dialog">Cancel</button>
+    </form>
+</dialog>
+
+{% for site, files in sites.items() %}
+<h2><a href="sites/{{ site }}">{{ site }}</a></h2>
+<ul>
+    {% for file in files %}
+    <li>{{ file }}</li>
     {% endfor %}
+</ul>
+{% endfor %}
 </body>
 </html>

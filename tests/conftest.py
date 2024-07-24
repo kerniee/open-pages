@@ -48,10 +48,9 @@ def site_files(files_folder, file_names) -> list[SiteFiles]:
 @fixture()
 def test_site(client, site_files) -> str:
     site_name = "simple_site"
+    files = [("name", (None, site_name))] + [("files", f) for f in site_files]
 
-    resp = client.post(
-        f"/api/sites/{site_name}", files=[("files", f) for f in site_files]
-    )
+    resp = client.post("/api/sites", files=files)
     assert resp.status_code == 200
 
     return site_name
