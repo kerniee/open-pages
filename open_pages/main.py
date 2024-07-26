@@ -1,4 +1,6 @@
-from fastapi import Depends, FastAPI, Request
+from typing import Any, Callable, Coroutine
+
+from fastapi import Depends, FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
 from open_pages.api.routes import router as api_router
@@ -12,6 +14,7 @@ def init_settings(settings: SettingsDep, req: Request) -> None:
 
 
 app = FastAPI(dependencies=[Depends(init_settings)])
+MiddlewareCallable = Callable[..., Coroutine[Any, Any, Response]]
 
 
 @app.exception_handler(AppException)
@@ -22,6 +25,13 @@ async def unicorn_exception_handler(req: Request, exc: AppException) -> JSONResp
             content={"detail": exc.args[0]},
         )
     raise exc
+
+
+@app.middleware("http")
+async def add_referrer_header(req: Request, call_next: MiddlewareCallable) -> Response:
+    resp = await call_next(req)
+    resp.headers["Referrer-Policy"] = "same-origin"
+    return resp
 
 
 app.include_router(api_router)
