@@ -27,7 +27,7 @@ def existing_site(site_name: SiteName, settings: SettingsDep) -> Path:
 
 class SiteInfo(BaseModel):
     name: SiteName
-    size: ByteSize
+    size: Annotated[int, ByteSize]
     number_of_files: PositiveInt
     last_modified: datetime
     last_modified_pretty: str

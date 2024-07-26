@@ -1,4 +1,5 @@
 import functools
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends
@@ -7,7 +8,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    data_dir: DirectoryPath = DirectoryPath("data")
+    data_dir: DirectoryPath = Path("data")
 
     chunk_size: int = 2**20  # 1 MB
     catch_exceptions: bool = True
