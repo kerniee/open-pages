@@ -32,6 +32,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff.lint]
 select = [
+    "FAST", # fastapi
     "E", # pycodestyle errors
     "W", # pycodestyle warnings
     "F", # pyflakes
@@ -47,6 +48,7 @@ select = [
 
 [tool.mypy]
 strict = true
+plugins = "pydantic.mypy"
 
 [[tool.mypy.overrides]]
 module = "tests.*"

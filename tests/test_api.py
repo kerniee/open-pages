@@ -18,7 +18,7 @@ def test_invalid_filename(client, site_files) -> None:
 
 
 def test_list_files(client, test_site, file_names) -> None:
-    resp = client.get(f"/api/sites/{test_site}")
+    resp = client.get(f"/api/sites/{test_site}/files")
     assert resp.status_code == 200
     assert resp.json() == file_names
 

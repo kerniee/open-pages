@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, Form, UploadFile
 from open_pages.common import AppException, log
 from open_pages.files import get_files, save_file
 from open_pages.settings import SettingsDep
-from open_pages.site import SiteName, existing_site
+from open_pages.site import SiteInfo, SiteName, existing_site, get_site_info
 
 router = APIRouter(prefix="/api", tags=["API"])
 
@@ -39,9 +39,14 @@ async def upload_site_files(
     return "ok"
 
 
-@router.get("/sites/{site_name}")
+@router.get("/sites/{site_name}/files")
 def list_site_files(site_folder: Annotated[Path, Depends(existing_site)]) -> list[str]:
     return [file.name for file in get_files(site_folder)]
+
+
+@router.get("/sites/{site_name}")
+def get_site(site_folder: Annotated[Path, Depends(existing_site)]) -> SiteInfo:
+    return get_site_info(site_folder)
 
 
 @router.delete("/sites/{site_name}")

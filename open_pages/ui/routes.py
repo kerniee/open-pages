@@ -8,7 +8,7 @@ from pydantic import HttpUrl
 
 from open_pages.files import get_files, get_sites
 from open_pages.settings import SettingsDep
-from open_pages.site import existing_site
+from open_pages.site import existing_site, get_site_info
 from open_pages.ui.utils import get_site_from_referer
 
 router = APIRouter(tags=["UI"])
@@ -27,10 +27,15 @@ SiteDep = Annotated[str | None, Depends(get_site)]
 
 @router.get("/")
 def index(request: Request, settings: SettingsDep) -> HTMLResponse:
-    site_names = list(get_sites(settings))
-    sites = {name: get_files(settings.data_dir / name) for name in site_names}
+    sites = {}
+    for name in get_sites(settings):
+        path = settings.data_dir / name
+        sites[name] = {
+            "files": get_files(path),
+            "info": get_site_info(path),
+        }
     return templates.TemplateResponse(
-        request=request, name="index.html", context={"sites": sites}
+        request=request, name="index.jinja", context={"sites": sites}
     )
 
 

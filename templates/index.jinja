@@ -101,16 +101,16 @@
     </form>
 </dialog>
 
-{% for site, files in sites.items() %}
-<div class="row">
-    <h2><a href="sites/{{ site }}">{{ site }}</a></h2>
-    <button name="{{ site }}" class="delete-site-btn">Delete site</button>
-</div>
-<ul>
-    {% for file in files %}
-    <li>{{ file }}</li>
-    {% endfor %}
-</ul>
+{% for site_name, site in sites.items() %}
+    <div class="row">
+        <h2><a href="sites/{{ site_name }}">{{ site_name }}</a></h2>
+        <button name="{{ site_name }}" class="delete-site-btn">Delete site</button>
+    </div>
+    <ul>
+        <li><b>Size:</b> {{ site["info"].size.human_readable() }}</li>
+        <li><b>Number of files:</b> {{ site["info"].number_of_files }}</li>
+        <li><b>Last Modified:</b> {{ site["info"].last_modified_pretty }}</li>
+    </ul>
 {% endfor %}
 </body>
 </html>

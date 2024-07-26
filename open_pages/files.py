@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Iterable
 
@@ -23,9 +24,9 @@ async def save_file(src: UploadFile, dst: Path, chunk_size: int) -> None:
 
 def get_files(folder: Path) -> Iterable[Path]:
     assert folder.is_dir()
-    for f in folder.iterdir():
-        if f.is_file():
-            yield f
+    for path, _, files in os.walk(folder):
+        for name in files:
+            yield Path(os.path.join(path, name))
 
 
 def get_sites(settings: SettingsDep) -> Iterable[str]:
