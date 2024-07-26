@@ -30,12 +30,32 @@
             padding: 10px;
             border-radius: 5px;
         }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
     </style>
     <script>
       window.addEventListener('load', function () {
         const modalElement = document.getElementById("modal");
         const uploadBtn = document.getElementById("upload-btn");
         const uploadForm = document.getElementById("upload-form");
+        const deleteBtns = document.querySelectorAll(".delete-site-btn");
+
+        deleteBtns.forEach((btn) => {
+          btn.addEventListener("click", (event) => {
+            const site = event.target.name;
+            fetch(`/api/sites/${site}`, {
+              method: "DELETE"
+            }).then((response) => {
+              if (response.ok) {
+                window.location.reload();
+              }
+            });
+          });
+        });
 
 
         uploadBtn.addEventListener("click", () => {
@@ -82,7 +102,10 @@
 </dialog>
 
 {% for site, files in sites.items() %}
-<h2><a href="sites/{{ site }}">{{ site }}</a></h2>
+<div class="row">
+    <h2><a href="sites/{{ site }}">{{ site }}</a></h2>
+    <button name="{{ site }}" class="delete-site-btn">Delete site</button>
+</div>
 <ul>
     {% for file in files %}
     <li>{{ file }}</li>

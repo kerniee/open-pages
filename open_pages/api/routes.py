@@ -1,5 +1,6 @@
 import asyncio
 import os.path
+import shutil
 from pathlib import Path
 from typing import Annotated
 
@@ -41,3 +42,9 @@ async def upload_site_files(
 @router.get("/sites/{site_name}")
 def list_site_files(site_folder: Annotated[Path, Depends(existing_site)]) -> list[str]:
     return [file.name for file in get_files(site_folder)]
+
+
+@router.delete("/sites/{site_name}")
+def delete_site(site_folder: Annotated[Path, Depends(existing_site)]) -> str:
+    shutil.rmtree(site_folder)
+    return "ok"

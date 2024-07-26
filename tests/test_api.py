@@ -36,3 +36,16 @@ def test_with_subpath(client, site_files) -> None:
 
     resp = upload_site(client, "subpath_site", subpath_file_paths)
     assert resp.status_code == 200
+
+
+def test_delete(client, test_site) -> None:
+    resp = client.delete(f"/api/sites/{test_site}")
+    assert resp.status_code == 200
+
+    resp = client.get(f"/api/sites/{test_site}")
+    assert resp.status_code == 400
+    assert resp.json() == {"detail": "Site not found"}
+
+    resp = client.delete(f"/api/sites/{test_site}")
+    assert resp.status_code == 400
+    assert resp.json() == {"detail": "Site not found"}
