@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header, Request
@@ -5,9 +6,9 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import HttpUrl
 
-from open_pages.common import AppException
 from open_pages.files import get_files, get_sites
 from open_pages.settings import SettingsDep
+from open_pages.site import existing_site
 from open_pages.ui.utils import get_site_from_referer
 
 router = APIRouter(tags=["UI"])
@@ -27,7 +28,7 @@ SiteDep = Annotated[str | None, Depends(get_site)]
 @router.get("/")
 def index(request: Request, settings: SettingsDep) -> HTMLResponse:
     site_names = list(get_sites(settings))
-    sites = {name: get_files(name, settings) for name in site_names}
+    sites = {name: get_files(settings.data_dir / name) for name in site_names}
     return templates.TemplateResponse(
         request=request, name="index.html", context={"sites": sites}
     )
@@ -43,27 +44,19 @@ def favicon_png() -> FileResponse:
     return FileResponse("templates/favicon-32x32.png")
 
 
-@router.get("/sites/{path}")
-@router.get("/{path}")
+@router.get("/{path:path}")
+@router.get("/sites/{path:path}")
 def visit_site(
-    path: str, settings: SettingsDep, site_from_referrer: SiteDep
+    path: Path, settings: SettingsDep, site_from_referrer: SiteDep
 ) -> FileResponse:
     if site_from_referrer:
         site_name = site_from_referrer
-        req_file_name = path
+        req_file_path = path
     else:
-        site_name = path
-        req_file_name = "index.html"
+        site_name = str(path)
+        req_file_path = Path("index.html")
 
-    files = list(get_files(site_name, settings))
-
-    chosen_file_path = None
-    for file in files:
-        if file.name == req_file_name:
-            chosen_file_path = file
-            break
-    if not chosen_file_path:
-        raise AppException("No index.html found")
+    site_folder = existing_site(site_name, settings)
 
     headers = {"Cache-Control": "no-cache"}
-    return FileResponse(chosen_file_path, headers=headers)
+    return FileResponse(site_folder / req_file_path, headers=headers)

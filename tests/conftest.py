@@ -8,6 +8,7 @@ from pytest import fixture
 
 from open_pages.main import app
 from open_pages.settings import Settings, get_settings
+from tests.api import upload_site
 
 T = TypeVar("T")
 YieldFixture = Generator[T, None, None]
@@ -23,6 +24,7 @@ def data_folder() -> YieldFixture[Path]:
 @fixture
 def client(data_folder: Path) -> TestClient:
     app.dependency_overrides[get_settings] = lambda: Settings(data_dir=data_folder)
+    app.data_folder = data_folder  # type: ignore # Just for debugging
     return TestClient(app)
 
 
@@ -45,12 +47,10 @@ def site_files(files_folder, file_names) -> list[SiteFiles]:
     return result
 
 
-@fixture()
+@fixture
 def test_site(client, site_files) -> str:
     site_name = "simple_site"
-    files = [("name", (None, site_name))] + [("files", f) for f in site_files]
-
-    resp = client.post("/api/sites", files=files)
+    resp = upload_site(client, site_name, site_files)
     assert resp.status_code == 200
 
     return site_name

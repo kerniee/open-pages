@@ -12,3 +12,9 @@ def test_visit_site_with_referrer(client, test_site, site_files) -> None:
     assert resp.status_code == 200
     index_css = next(f.file_contents for f in site_files if f.filename == "index.css")
     assert resp.text == index_css
+
+
+def test_non_existent_site(client) -> None:
+    resp = client.get("/sites/non_existent_site")
+    assert resp.status_code == 400
+    assert resp.json() == {"detail": "Site not found"}

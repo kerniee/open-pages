@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     data_dir: DirectoryPath = DirectoryPath("data")
 
     chunk_size: int = 2**20  # 1 MB
+    catch_exceptions: bool = True
 
 
 @functools.lru_cache

@@ -66,14 +66,14 @@
 
 <button id="upload-btn">Upload Site</button>
 <dialog id="modal">
-    <form method="post" enctype="multipart/form-data" action="/api/sites/" id="upload-form">
+    <form method="post" enctype="multipart/form-data" action="/api/sites" id="upload-form">
         <p>
             <label>Site Name: </label><br/>
             <input type="text" name="name"/>
         <p>
         <p>
             <label>Add files: </label><br/>
-            <input type="file" name="files" multiple="multiple"/>
+            <input type="file" name="files" multiple="multiple" webkitdirectory mozdirectory/>
         </p>
         <input type="submit"/>
         </p>
