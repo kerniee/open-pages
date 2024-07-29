@@ -12,7 +12,7 @@ from open_pages.utils import prettydate
 SiteName = Annotated[str, StringConstraints(pattern=r"^[a-zA-Z0-9_\-]+$")]
 
 
-def existing_site(site_name: SiteName, settings: SettingsDep) -> Path:
+def get_existing_site(site_name: SiteName, settings: SettingsDep) -> Path:
     site_folder = settings.data_dir / site_name
 
     if (

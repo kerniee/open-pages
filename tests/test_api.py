@@ -49,3 +49,14 @@ def test_delete(client, test_site) -> None:
     resp = client.delete(f"/api/sites/{test_site}")
     assert resp.status_code == 400
     assert resp.json() == {"detail": "Site not found"}
+
+
+def test_rename(client, test_site) -> None:
+    resp = client.put(f"/api/sites/{test_site}", json={"name": "renamed_site"})
+    assert resp.status_code == 200
+
+    resp = client.get(f"/api/sites/{test_site}")
+    assert resp.status_code == 400
+
+    resp = client.get("/api/sites/renamed_site")
+    assert resp.status_code == 200

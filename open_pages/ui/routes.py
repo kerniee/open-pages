@@ -8,7 +8,7 @@ from pydantic import HttpUrl
 
 from open_pages.files import get_files, get_sites
 from open_pages.settings import SettingsDep
-from open_pages.site import existing_site, get_site_info
+from open_pages.site import get_existing_site, get_site_info
 from open_pages.ui.utils import get_site_from_referer
 
 router = APIRouter(tags=["UI"])
@@ -70,7 +70,7 @@ def visit_site(
         site_name = str(path)
         req_file_path = Path("index.html")
 
-    site_folder = existing_site(site_name, settings)
+    site_folder = get_existing_site(site_name, settings)
 
     headers = {"Cache-Control": "no-cache"}
     return FileResponse(site_folder / req_file_path, headers=headers)

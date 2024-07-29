@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Open Pages</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -26,6 +26,7 @@
                 <ul class="uk-navbar-nav">
                     <li class="uk-active"><a href="#">Open Pages</a></li>
                     <li><a href="#upload" uk-toggle>Upload Site</a></li>
+                    <li><a href="/docs">API Docs</a></li>
                 </ul>
 
             </div>
@@ -67,14 +68,20 @@
         {% for site in sites %}
             <div>
                 <div class="uk-card uk-card-body uk-card-default">
-                    <h3 class="uk-card-title"><a href="sites/{{ site["name"] }}">{{ site["name"] }}</a></h3>
+                    <h3 class="uk-card-title uk-flex uk-flex-middle" style="user-select: none">
+                        <span>{{ site["name"] }}</span>
+                        <span class="uk-icon-link edit-button" uk-icon="pencil" style="padding: 0 5px;"></span>
+                    </h3>
                     <ul>
                         <li><b>Size:</b> {{ site["info"].size.human_readable() }}</li>
                         <li><b>Number of files:</b> {{ site["info"].number_of_files }}</li>
                         <li><b>Modified:</b> {{ site["info"].last_modified_pretty }}</li>
                     </ul>
-                    <button class="uk-button uk-button-danger uk-width-1-1 delete-button" name="{{ site["name"] }}">Delete
-                        site
+                    <a href="sites/{{ site["name"] }}"  class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" name="{{ site["name"] }}">
+                        Visit site
+                    </a>
+                    <button class="uk-button uk-button-danger uk-width-1-1 delete-button" name="{{ site["name"] }}">
+                        Delete site
                     </button>
                 </div>
             </div>

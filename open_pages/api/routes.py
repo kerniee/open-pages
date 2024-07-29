@@ -5,11 +5,12 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, UploadFile
+from pydantic import BaseModel
 
 from open_pages.common import AppException, log
 from open_pages.files import get_files, save_file
 from open_pages.settings import SettingsDep
-from open_pages.site import SiteInfo, SiteName, existing_site, get_site_info
+from open_pages.site import SiteInfo, SiteName, get_existing_site, get_site_info
 
 router = APIRouter(prefix="/api", tags=["API"])
 
@@ -40,16 +41,41 @@ async def upload_site_files(
 
 
 @router.get("/sites/{site_name}/files")
-def list_site_files(site_folder: Annotated[Path, Depends(existing_site)]) -> list[str]:
+def list_site_files(
+    site_folder: Annotated[Path, Depends(get_existing_site)],
+) -> list[str]:
     return [file.name for file in get_files(site_folder)]
 
 
 @router.get("/sites/{site_name}")
-def get_site(site_folder: Annotated[Path, Depends(existing_site)]) -> SiteInfo:
+def get_site(site_folder: Annotated[Path, Depends(get_existing_site)]) -> SiteInfo:
     return get_site_info(site_folder)
 
 
 @router.delete("/sites/{site_name}")
-def delete_site(site_folder: Annotated[Path, Depends(existing_site)]) -> str:
+def delete_site(site_folder: Annotated[Path, Depends(get_existing_site)]) -> str:
     shutil.rmtree(site_folder)
+    return "ok"
+
+
+class ChangeSite(BaseModel):
+    name: SiteName
+
+
+@router.put("/sites/{site_name}")
+def change_site(
+    site_folder: Annotated[Path, Depends(get_existing_site)],
+    changed_site: ChangeSite,
+    settings: SettingsDep,
+) -> str:
+    try:
+        existing_site = get_existing_site(changed_site.name, settings)
+    except AppException:
+        existing_site = None
+
+    if existing_site is not None:
+        raise AppException(f"Site with name '{changed_site.name}' already exists")
+
+    site_folder.rename(site_folder.parent / changed_site.name)
+
     return "ok"
