@@ -27,13 +27,17 @@ SiteDep = Annotated[str | None, Depends(get_site)]
 
 @router.get("/")
 def index(request: Request, settings: SettingsDep) -> HTMLResponse:
-    sites = {}
+    sites = []
     for name in get_sites(settings):
         path = settings.data_dir / name
-        sites[name] = {
-            "files": get_files(path),
-            "info": get_site_info(path),
-        }
+        sites.append(
+            {
+                "name": name,
+                "files": get_files(path),
+                "info": get_site_info(path),
+            }
+        )
+    sites.sort(key=lambda x: x["info"].last_modified, reverse=True)  # type: ignore
     return templates.TemplateResponse(
         request=request, name="index.jinja", context={"sites": sites}
     )
@@ -47,6 +51,11 @@ def favicon_ico() -> FileResponse:
 @router.get("/favicon-32x32.png")
 def favicon_png() -> FileResponse:
     return FileResponse("templates/favicon-32x32.png")
+
+
+@router.get("/static/{path:path}")
+def uikit(path: Path) -> FileResponse:
+    return FileResponse(f"templates/static/{path}")
 
 
 @router.get("/{path:path}")

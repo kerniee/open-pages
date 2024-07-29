@@ -31,5 +31,5 @@ def get_files(folder: Path) -> Iterable[Path]:
 
 def get_sites(settings: SettingsDep) -> Iterable[str]:
     for f in settings.data_dir.iterdir():
-        if f.is_dir():
+        if f.is_dir() and any(os.scandir(f)):
             yield f.name

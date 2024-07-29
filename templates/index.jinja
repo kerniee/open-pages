@@ -1,116 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Pages</title>
+    <title>Title</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="/favicon-32x32.png" sizes="32x32">
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.21.8/dist/css/uikit.min.css"/>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.8/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.8/dist/js/uikit-icons.min.js"></script>
 
-        h2 {
-            color: #2c3e50;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            background: #ecf0f1;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-    </style>
-    <script>
-      window.addEventListener('load', function () {
-        const modalElement = document.getElementById("modal");
-        const uploadBtn = document.getElementById("upload-btn");
-        const uploadForm = document.getElementById("upload-form");
-        const deleteBtns = document.querySelectorAll(".delete-site-btn");
-
-        deleteBtns.forEach((btn) => {
-          btn.addEventListener("click", (event) => {
-            const site = event.target.name;
-            fetch(`/api/sites/${site}`, {
-              method: "DELETE"
-            }).then((response) => {
-              if (response.ok) {
-                window.location.reload();
-              }
-            });
-          });
-        });
-
-
-        uploadBtn.addEventListener("click", () => {
-          modalElement.showModal();
-        });
-
-        uploadForm.addEventListener("submit", (event) => {
-          if (event.submitter.value === "cancel") {
-            return;
-          }
-
-          event.preventDefault();
-          const formData = new FormData(uploadForm);
-          fetch(uploadForm.action, {
-            method: uploadForm.method,
-            body: formData
-          }).then((response) => {
-            if (response.ok) {
-              window.location.reload();
-            }
-          });
-        });
-      })
-    </script>
+    <!-- Main JS -->
+    <script src="static/index.js"></script>
 </head>
 <body>
-<h1>Site Files Hierarchy</h1>
 
-<button id="upload-btn">Upload Site</button>
-<dialog id="modal">
-    <form method="post" enctype="multipart/form-data" action="/api/sites" id="upload-form">
-        <p>
-            <label>Site Name: </label><br/>
-            <input type="text" name="name"/>
-        <p>
-        <p>
-            <label>Add files: </label><br/>
-            <input type="file" name="files" multiple="multiple" webkitdirectory mozdirectory/>
-        </p>
-        <input type="submit"/>
-        </p>
-        <button value="cancel" formmethod="dialog">Cancel</button>
-    </form>
-</dialog>
+<nav class="uk-navbar-container">
+    <div class="uk-container uk-container-expand">
+        <div uk-navbar>
 
-{% for site_name, site in sites.items() %}
-    <div class="row">
-        <h2><a href="sites/{{ site_name }}">{{ site_name }}</a></h2>
-        <button name="{{ site_name }}" class="delete-site-btn">Delete site</button>
+            <div class="uk-navbar-left">
+
+                <ul class="uk-navbar-nav">
+                    <li class="uk-active"><a href="#">Open Pages</a></li>
+                    <li><a href="#upload" uk-toggle>Upload Site</a></li>
+                </ul>
+
+            </div>
+
+        </div>
     </div>
-    <ul>
-        <li><b>Size:</b> {{ site["info"].size.human_readable() }}</li>
-        <li><b>Number of files:</b> {{ site["info"].number_of_files }}</li>
-        <li><b>Last Modified:</b> {{ site["info"].last_modified_pretty }}</li>
-    </ul>
-{% endfor %}
+</nav>
+
+<div id="upload" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+
+        <form class="uk-form-stacked" method="post" enctype="multipart/form-data" action="/api/sites"
+              id="upload-form">
+
+            <div>
+                <label class="uk-form-label" for="name">Site Name: </label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" type="text" name="name" id="name" required/>
+                </div>
+            </div>
+
+            <div>
+                <input class="uk-input" type="file" name="files" id="files" multiple webkitdirectory
+                       mozdirectory required style="padding: 7px"/>
+            </div>
+            <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+
+            <div class="align-right" style="gap: 0.5rem">
+                {#            <button value="cancel" formmethod="dialog">Cancel</button>#}
+                <input class="uk-input" type="submit"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="uk-container uk-margin-top">
+    <div class="uk-child-width-1-3" uk-grid>
+        {% for site in sites %}
+            <div>
+                <div class="uk-card uk-card-body uk-card-default">
+                    <h3 class="uk-card-title"><a href="sites/{{ site["name"] }}">{{ site["name"] }}</a></h3>
+                    <ul>
+                        <li><b>Size:</b> {{ site["info"].size.human_readable() }}</li>
+                        <li><b>Number of files:</b> {{ site["info"].number_of_files }}</li>
+                        <li><b>Modified:</b> {{ site["info"].last_modified_pretty }}</li>
+                    </ul>
+                    <button class="uk-button uk-button-danger uk-width-1-1 delete-button" name="{{ site["name"] }}">Delete
+                        site
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 </body>
 </html>
