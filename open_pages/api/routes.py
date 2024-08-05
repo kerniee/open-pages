@@ -2,7 +2,7 @@ import asyncio
 import os.path
 import shutil
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Awaitable
 
 from fastapi import APIRouter, Depends, Form, UploadFile
 from pydantic import BaseModel
@@ -29,14 +29,25 @@ async def upload_site_files(
         prefix = os.path.commonpath([file.filename for file in files if file.filename])
     log.debug(f"Prefix: {prefix}")
 
-    tasks = []
+    tasks: list[Awaitable[None]] = []
+    index_html_found = False
     for file in files:
         if not file.filename or file.filename == ".":
-            raise AppException("Invalid file name")
+            await asyncio.gather(*tasks)
+            shutil.rmtree(site_folder)
+            raise AppException(f"Invalid file name: '{file.filename}'")
         relative_dst = Path(file.filename).relative_to(prefix)
+        if relative_dst == Path("index.html"):
+            index_html_found = True
         dst = site_folder / relative_dst
         tasks.append(save_file(file, dst, settings.chunk_size))
+
     await asyncio.gather(*tasks)
+
+    if index_html_found is False:
+        shutil.rmtree(site_folder)
+        raise AppException("No index.html file found")
+
     return "ok"
 
 

@@ -1,3 +1,13 @@
+async function showError(resp) {
+  const contentType = resp.headers.get("content-type");
+  if (contentType && contentType.indexOf("application/json") !== -1) {
+    const data = await resp.json()
+    window.alert("App exception: " + data["detail"]);
+  } else {
+    window.alert("App exception: " + resp.statusText);
+  }
+}
+
 window.addEventListener('load', function () {
   const deleteBtns = document.querySelectorAll(".delete-button");
 
@@ -10,6 +20,8 @@ window.addEventListener('load', function () {
         }).then((response) => {
           if (response.ok) {
             window.location.reload();
+          } else {
+            showError(response)
           }
         });
       }
@@ -31,6 +43,8 @@ window.addEventListener('load', function () {
     }).then((response) => {
       if (response.ok) {
         window.location.reload();
+      } else {
+        showError(response)
       }
     });
   });
@@ -54,20 +68,12 @@ window.addEventListener('load', function () {
           if (response.ok) {
             window.location.reload();
           } else {
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-              response.json().then((data) => {
-                window.alert("Failed to update site name: " + data["detail"]);
-                window.location.reload();
-              })
-            } else {
-              window.alert("Failed to update site name: " + response.statusText);
+            showError(response).then(() => {
               window.location.reload();
-            }
+            });
           }
         }
       )
-      ;
     }
   }
 

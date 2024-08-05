@@ -7,6 +7,11 @@ def test_upload_one_file(client, test_site, site_files) -> None:
     assert resp.status_code == 200
 
 
+def test_upload_files_without_indexhtml(client, test_site, site_files) -> None:
+    resp = upload_site(client, "simple_site", [site_files[1]])
+    assert resp.status_code == 400
+
+
 def test_no_files(client) -> None:
     resp = upload_site(client, "simple_site", [])
     assert resp.status_code == 422
