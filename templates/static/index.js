@@ -3,14 +3,16 @@ window.addEventListener('load', function () {
 
   deleteBtns.forEach((btn) => {
     btn.addEventListener("click", (event) => {
-      const site = event.target.name;
-      fetch(`/api/sites/${site}`, {
-        method: "DELETE"
-      }).then((response) => {
-        if (response.ok) {
-          window.location.reload();
-        }
-      });
+      if (confirm("Are you sure you want to delete this site?")) {
+        const site = event.target.name;
+        fetch(`/api/sites/${site}`, {
+          method: "DELETE"
+        }).then((response) => {
+          if (response.ok) {
+            window.location.reload();
+          }
+        });
+      }
     });
   });
 
