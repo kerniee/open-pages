@@ -14,6 +14,12 @@
 
     <!-- Main JS -->
     <script src="static/index.js"></script>
+
+    <style>
+        .uk-button {
+            border-radius: 2rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -68,21 +74,31 @@
         {% for site in sites %}
             <div>
                 <div class="uk-card uk-card-body uk-card-default">
-                    <h3 class="uk-card-title uk-flex uk-flex-middle" style="user-select: none">
+                    <h3 class="uk-card-title uk-flex uk-flex-middle">
                         <span>{{ site["name"] }}</span>
-                        <span class="uk-icon-link edit-button" uk-icon="pencil" style="padding: 0 5px;"></span>
+                        <span class="uk-icon-link edit-button" uk-icon="pencil"
+                              style="padding: 0 5px; user-select: none"></span>
                     </h3>
                     <ul>
                         <li><b>Size:</b> {{ site["info"].size.human_readable() }}</li>
                         <li><b>Number of files:</b> {{ site["info"].number_of_files }}</li>
                         <li><b>Modified:</b> {{ site["info"].last_modified_pretty }}</li>
                     </ul>
-                    <a href="sites/{{ site["name"] }}"  class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" name="{{ site["name"] }}">
-                        Visit site
-                    </a>
-                    <button class="uk-button uk-button-danger uk-width-1-1 delete-button" name="{{ site["name"] }}">
-                        Delete site
-                    </button>
+                    <div class="uk-child-width-1-2" uk-grid>
+                        <div>
+                            <button class="uk-button uk-button-danger uk-width-1-1 delete-button"
+                                    name="{{ site["name"] }}">
+                                Delete
+                            </button>
+                        </div>
+                        <div>
+                            <a href="sites/{{ site["name"] }}"
+                               class="uk-button uk-button-primary uk-width-1-1"
+                               name="{{ site["name"] }}">
+                                Visit
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}
