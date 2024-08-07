@@ -55,7 +55,7 @@ async def upload_site_files(
 def list_site_files(
     site_folder: Annotated[Path, Depends(get_existing_site)],
 ) -> list[str]:
-    return [file.name for file in get_files(site_folder)]
+    return sorted([file.name for file in get_files(site_folder)])
 
 
 @router.get("/sites/{site_name}")
