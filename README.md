@@ -22,10 +22,14 @@ following command to deploy the application:
 docker compose up
 ```
 
+### Kubernetes
+
+Deploy Open Pages to kubernetes using helm chart. For more information, see [helm chart repo](https://github.com/kerniee/open-pages-helm)
+
 ## Contributing
 
-Contributions are welcome! Please see the [contributing guidelines](CONTRIBUTING.md) for more information.
+Contributions are welcome! Please see the [contributing guidelines](CONTRIBUTING.md) for more information
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details
