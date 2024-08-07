@@ -26,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: kerniee/open-pages:latest,kerniee/open-pages:${{ github.event.release.tag_name }}
+          tags: kernie/open-pages:latest,kernie/open-pages:${{ github.event.release.tag_name }}
