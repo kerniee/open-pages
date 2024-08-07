@@ -5,14 +5,18 @@ description = "Open Pages is an open-source project that provides a minimalistic
 authors = ["Matvey Abramov <karapys.mor@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "open_pages" }]
+license = "MIT"
+
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.111.1"
+fastapi = "^0.112.0"
 uvicorn = "^0.30.3"
 pydantic-settings = "^2.3.4"
 aiofiles = "^24.1.0"
 beautifulsoup4 = "^4.12.3"
+python-multipart = "^0.0.9"
+jinja2 = "^3.1.4"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -21,6 +25,8 @@ mypy = "^1.11.0"
 types-aiofiles = "^24.1.0.20240626"
 ruff = "^0.5.4"
 types-beautifulsoup4 = "^4.12.0.20240511"
+httpx = "^0.27.0"
+fastapi-cli = "^0.0.5"
 
 
 [tool.poetry.group.dev-optional.dependencies]
