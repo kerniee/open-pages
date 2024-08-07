@@ -12,4 +12,4 @@ COPY open_pages open_pages
 
 # Run the application
 EXPOSE 80
-CMD ["fastapi", "run", "open_pages/main.py", "--proxy-headers", "--port", "80"]
+CMD ["uvicorn", "open_pages.main:app", "--proxy-headers", "--port", "80"]
