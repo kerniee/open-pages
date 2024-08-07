@@ -22,15 +22,13 @@ Welcome! Open Pages is always looking for contributors.
    poetry install
    ```
 
-5. Install tool called pre-commit. See the [official documentaion](https://pre-commit.com/).
-
-6. Initialize pre-commit hooks:
+5. Initialize pre-commit hooks:
 
    ```shell
-   pre-commit install
+   poetry run pre-commit install
    ```
 
-7. Run the development server:
+6. Run the development server:
 
     ```shell
     poetry run fastapi dev open_pages/main.py

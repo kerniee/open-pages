@@ -27,6 +27,7 @@ ruff = "^0.5.4"
 types-beautifulsoup4 = "^4.12.0.20240511"
 httpx = "^0.27.0"
 fastapi-cli = "^0.0.5"
+pre-commit = "^3.8.0"
 
 
 [tool.poetry.group.dev-optional.dependencies]
@@ -37,6 +38,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff.lint]
+preview = true
 select = [
     "FAST", # fastapi
     "E", # pycodestyle errors
