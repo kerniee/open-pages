@@ -1,0 +1,11 @@
+name: open-pages
+
+services:
+  open_pages:
+    image: kernie/open-pages
+    ports:
+      - "80:80"
+    environment:
+      DATA_DIR: "/data"  # Specify folder where uploaded sites will be stored
+    volumes:
+      - ./data:/data
