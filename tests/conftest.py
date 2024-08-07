@@ -35,7 +35,7 @@ def files_folder() -> Path:
 
 @fixture(scope="session")
 def file_names() -> list[str]:
-    return ["index.html", "index.css", "index.js"]
+    return ["index.css", "index.html", "index.js"]
 
 
 @fixture(scope="session")
