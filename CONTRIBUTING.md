@@ -4,29 +4,33 @@ Welcome! Open Pages is always looking for contributors.
 
 ## Getting Started with Development
 
-1. Clone the repository:
+1. Fork the repository from GitHub UI
+
+2. Clone the forked repository:
 
    ```bash
-   git clone https://github.com/kerniee/open-pages.git
+   git clone https://github.com/your-github-profile/open-pages.git
+   # Alternatively, use ssh
+   git clone git@github.com:your-github-profile/open-pages.git
    ```
 
-2. Install poetry, a Python package manager. See the [official documentation](https://python-poetry.org/docs/).
+3. Install poetry, a Python package manager. See the [official documentation](https://python-poetry.org/docs/).
 
-3. Install dependencies:
+4. Install dependencies:
 
    ```shell
    poetry install
    ```
 
-4. Install tool called pre-commit. See the [official documentaion](https://pre-commit.com/).
+5. Install tool called pre-commit. See the [official documentaion](https://pre-commit.com/).
 
-5. Initialize pre-commit hooks:
+6. Initialize pre-commit hooks:
 
    ```shell
    pre-commit install
    ```
 
-6. Run the development server:
+7. Run the development server:
 
     ```shell
     poetry run fastapi dev open_pages/main.py
@@ -45,5 +49,5 @@ commit naming.
 
 ## Submitting changes
 
-Open Pull Request from your branch to the `master` branch. Provide description of your changes and make sure the
-pipeline is green.
+Open Pull Request from your forked repository branch to the `master` branch in the main repository. Provide description
+of your changes and make sure the pipeline is green.
