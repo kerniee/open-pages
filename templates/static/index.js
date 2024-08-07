@@ -2,9 +2,9 @@ async function showError(resp) {
   const contentType = resp.headers.get("content-type");
   if (contentType && contentType.indexOf("application/json") !== -1) {
     const data = await resp.json()
-    window.alert("App exception: " + data["detail"]);
+    window.alert("App exception: " + JSON.stringify(data["detail"]));
   } else {
-    window.alert("App exception: " + resp.statusText);
+    window.alert("App exception: " + resp.status);
   }
 }
 
