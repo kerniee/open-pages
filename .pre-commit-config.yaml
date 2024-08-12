@@ -10,7 +10,7 @@ ci:
     for more information, see https://pre-commit.ci
   autoupdate_commit_msg: |
     build(pre-commit.ci): pre-commit autoupdate
-  skip: [ mypy ]
+  skip: [ mypy, poetry-lock ]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
