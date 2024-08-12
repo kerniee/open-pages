@@ -30,9 +30,6 @@ fastapi-cli = "^0.0.5"
 pre-commit = "^3.8.0"
 
 
-[tool.poetry.group.dev-optional.dependencies]
-pytest-sugar = "^1.0.0"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
