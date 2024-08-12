@@ -3,6 +3,15 @@
 default_language_version:
   python: python3.12
 
+ci:
+  autofix_commit_msg: |
+    build(pre-commit.ci): auto fixes from pre-commit.com hooks
+
+    for more information, see https://pre-commit.ci
+  autoupdate_commit_msg: |
+    build(pre-commit.ci): pre-commit autoupdate
+  skip: [ mypy ]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -10,7 +19,7 @@ repos:
       - id: check-added-large-files
       - id: check-toml
       - id: check-yaml
-        exclude:  ^deploy/helm/
+        exclude: ^deploy/helm/
         args:
           - --unsafe
       - id: end-of-file-fixer
