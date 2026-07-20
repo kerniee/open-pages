@@ -1,7 +1,8 @@
 from collections import namedtuple
+from collections.abc import Generator
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Generator, TypeVar
+from typing import TypeVar
 
 from fastapi.testclient import TestClient
 from pytest import fixture

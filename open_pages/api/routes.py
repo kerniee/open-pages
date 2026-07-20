@@ -1,8 +1,9 @@
 import asyncio
 import os.path
 import shutil
+from collections.abc import Awaitable
 from pathlib import Path
-from typing import Annotated, Awaitable
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, UploadFile
 from pydantic import BaseModel

@@ -1,4 +1,4 @@
-from typing import Iterable
+from collections.abc import Iterable
 
 from httpx import Client, Response
 from httpx._types import FileTypes
